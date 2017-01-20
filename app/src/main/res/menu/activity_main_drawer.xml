@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_takephoto"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="拍照推荐音乐" />
+        <item
+            android:id="@+id/nav_community"
+            android:icon="@drawable/ic_menu_share"
+            android:title="社区" />
+        <item
+            android:id="@+id/nav_choosemusic"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="点歌" />
+        <item
+            android:id="@+id/nav_uploadmusic"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="上传歌曲" />
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_menu_send"
+            android:title="搜索" />
+    </group>
+
+    <item android:title="登陆用户专享功能">
+        <menu>
+            <item
+                android:id="@+id/nav_draw"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="用户画像" />
+            <item
+                android:id="@+id/nav_concert"
+                android:icon="@drawable/ic_menu_send"
+                android:title="虚拟音乐会" />
+            <item
+                android:id="@+id/nav_singandlisten"
+                android:icon="@drawable/ic_menu_slideshow"
+                android:title="我来唱你来听" />
+        </menu>
+    </item>
+
+</menu>
