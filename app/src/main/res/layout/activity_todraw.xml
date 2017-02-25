@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_todraw"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:gravity="center_vertical"
+    android:stretchColumns="0,3">
+    <TableRow>
+        <TextView />
+        <TextView
+            android:text="输入以下用户信息进行绘制"
+            android:textSize="16sp"
+            android:layout_column="1"
+            android:layout_span="2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <TextView />
+    </TableRow>
+    <TableRow android:layout_marginTop="20dp">
+        <TextView />
+        <TextView
+            android:text="   年龄  ："
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <EditText
+            android:id="@+id/age_todraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:minWidth="110sp"/>
+        <TextView />
+    </TableRow>
+    <TableRow android:layout_marginTop="20dp">
+        <TextView />
+        <TextView
+        android:text="   性别  ："
+        android:textSize="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        />
+        <RadioGroup
+            android:id="@+id/gender_todraw"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <RadioButton
+                android:id="@+id/male"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="男"
+                android:textSize="20sp"
+                />
+            <RadioButton
+                android:id="@+id/female"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="女"
+                android:textSize="20sp"
+                />
+        </RadioGroup>
+        <TextView />
+    </TableRow>
+    <TableRow android:layout_marginTop="20dp">
+        <TextView />
+        <Button
+            android:id="@+id/draw_todraw"
+            android:layout_column="1"
+            android:layout_span="2"
+            android:text="开始画像"
+            android:textSize="18sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="skipToDraw"
+            />
+        <TextView />
+    </TableRow>
+</TableLayout>

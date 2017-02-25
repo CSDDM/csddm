@@ -20,23 +20,33 @@ import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.csddm.ListeningMusicActivity;
+import com.example.csddm.LoginActivity;
 import com.example.csddm.R;
+import com.example.csddm.ToDrawActivity;
+import com.example.csddm.entity.User;
 
 import java.util.List;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+    public static final String TAG_USERACCOUNT ="user_account";
+    public static final String TAG_USENAME ="user_name";
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+    private String username;
+    private String useraccount="null";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_activity);
+        updateUserName();
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -44,7 +54,7 @@ public class MenuActivity extends AppCompatActivity
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Darling你好哇~祝美好的一天", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });
@@ -71,6 +81,17 @@ public class MenuActivity extends AppCompatActivity
             mTwoPane = true;
         }
 
+    }
+    //获取来自login/register的用户信息,更新界面
+    private void updateUserName(){
+        Intent intent = getIntent();
+        useraccount = intent.getStringExtra(TAG_USERACCOUNT);
+        username = intent.getStringExtra(TAG_USENAME);
+        LayoutInflater inflater = getLayoutInflater();
+        NavigationView view = (NavigationView)findViewById(R.id.nav_view);
+        View headerLayout = inflater.inflate(R.layout.nav_header_menu,view);
+        TextView account = (TextView)headerLayout.findViewById(R.id.account_menu);
+        account.setText(username);
     }
 
     private void setupRecyclerView(@NonNull RecyclerView recyclerView) {
@@ -120,13 +141,19 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_community) {
 
         } else if (id == R.id.nav_choosemusic) {
-
+            Intent intent = new Intent(this, ListeningMusicActivity.class);
+            intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+            intent.putExtra(MenuActivity.TAG_USENAME, username);
+            startActivity(intent);
         } else if (id == R.id.nav_uploadmusic) {
 
         } else if (id == R.id.nav_search) {
 
         }else if (id == R.id.nav_draw) {
-
+            Intent intent = new Intent(this, ToDrawActivity.class);
+            intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+            intent.putExtra(MenuActivity.TAG_USENAME, username);
+            startActivity(intent);
         } else if (id == R.id.nav_concert) {
 
         }else if (id == R.id.nav_singandlisten) {
@@ -162,7 +189,7 @@ public class MenuActivity extends AppCompatActivity
             holder.mView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    if (mTwoPane) {
+                    /*if (mTwoPane) {
                         Bundle arguments = new Bundle();
                         arguments.putString(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
                         ItemDetailFragment fragment = new ItemDetailFragment();
@@ -177,7 +204,8 @@ public class MenuActivity extends AppCompatActivity
                         intent.putExtra(ItemDetailFragment.ARG_ITEM_ID, holder.mItem.id);
 
                         context.startActivity(intent);
-                    }
+                    }*/
+                    startActivity(new Intent(".ListeningMusic"));
                 }
             });
         }
