@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
         String account = account_login.getText().toString();
         String password = password_login.getText().toString();
-        SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm_db",null,2);
+        SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         Cursor cursor = db.query("user",new String[]{"name"},"account=? and password=?",
                 new String[]{account,password},null,null,null);
@@ -40,7 +40,7 @@ public class LoginActivity extends AppCompatActivity {
         while(cursor.moveToNext()){
             user_name=cursor.getString(cursor.getColumnIndex("name"));
         }
-
+        db.close();
         if(!user_name.equals("")){
             Intent intent = new Intent(this, MenuActivity.class);
             intent.putExtra(MenuActivity.TAG_USERACCOUNT, account);

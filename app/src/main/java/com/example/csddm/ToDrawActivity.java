@@ -24,12 +24,14 @@ public class ToDrawActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todraw);
+        Intent intent = getIntent();
+        useraccount = intent.getStringExtra(MenuActivity.TAG_USERACCOUNT);
     }
 
     public void skipToDraw(View view){
         int age = Integer.parseInt(((EditText)findViewById(R.id.age_todraw)).getText().toString());
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.gender_todraw);
-        boolean isBoy = true;
+        boolean isBoy;
         if(radioGroup.getCheckedRadioButtonId()==R.id.female){
             isBoy=false;
         }else{
@@ -40,6 +42,9 @@ public class ToDrawActivity extends AppCompatActivity {
         intent.putExtra(MyResourse.TAG_AGE, age);
         intent.putExtra(MyResourse.TAG_ISBOY, isBoy);
         intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+        Log.i("todraw","age:"+age);
+        Log.i("todraw","isBoy:"+isBoy);
+        Log.i("todraw","account:"+useraccount);
         startActivity(intent);
     }
 

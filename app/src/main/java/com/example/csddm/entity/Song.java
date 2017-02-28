@@ -7,7 +7,7 @@ package com.example.csddm.entity;
 public class Song {
     private String songid;
     private String songname;
-    private int time;
+    private double time;
     private String style;
     private String label;
 
@@ -27,11 +27,11 @@ public class Song {
         this.songname = songname;
     }
 
-    public int getTime() {
+    public double getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(double time) {
         this.time = time;
     }
 
@@ -43,8 +43,8 @@ public class Song {
         this.style = style;
     }
 
-    public String getLabel() {
-        return label;
+    public String[] getLabel() {
+        return label.split(",");
     }
 
     public void setLabel(String label) {

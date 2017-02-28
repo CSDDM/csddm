@@ -3,12 +3,23 @@ package com.example.csddm.drawface;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.BackgroundColorSpan;
+import android.text.style.ForegroundColorSpan;
+import android.text.style.TypefaceSpan;
+import android.util.Log;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.RadioButton;
@@ -20,35 +31,51 @@ import android.widget.Toast;
 import com.example.csddm.R;
 import com.example.csddm.drawface.res.CustomView;
 import com.example.csddm.drawface.res.MyResourse;
+import com.example.csddm.entity.ListenRecord;
 import com.example.csddm.menu.MenuActivity;
+import com.example.csddm.operatedb.QueryData;
+import com.example.csddm.operatedb.SQLiteHelper;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Created by dell on 2017/2/25.
  */
 
-public class DrawActivity extends FragmentActivity {
+public class DrawActivity extends AppCompatActivity {
     private CustomView customView;
+    private TextView textView;
     private RelativeLayout reLayout;
     private boolean isBoy = true;
-    private int age;
-    private double[] character;
+    private boolean isDefault;
+    private int age=0;
+    private double[] character = new double[14];
     private String useraccount;
+    private Map<String, int[]> characterMap = new LinkedHashMap<String, int[]>();
+    private String[] labels = {"柔情甜蜜","励志","伤感","诙谐","清新欢快","激情","古风"};
+    private String[] characters={"外向","内向","冷静","冲动" ,"热情","典雅","乐观","悲观","富有情调","无趣","循规蹈矩","放荡不羁","多愁善感","幽默"};
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_persona);
         Intent intent = getIntent();
+        isDefault = false;
         isBoy = intent.getBooleanExtra(MyResourse.TAG_ISBOY, true);
         age = intent.getIntExtra(MyResourse.TAG_AGE,0);
         useraccount = intent.getStringExtra(MenuActivity.TAG_USERACCOUNT);
+        initCharacters();
         //年龄，性别,性格数组初始化
         reLayout = (RelativeLayout) findViewById(R.id.rl_persona);
         customView = new CustomView(this, isBoy);
         customView.setDrawingCacheEnabled(true);
+        textView=(TextView)findViewById(R.id.result_persona);
         reLayout.addView(customView);
 
         draw(isBoy,age,character);
@@ -107,6 +134,7 @@ public class DrawActivity extends FragmentActivity {
     }
 
     public void draw(boolean isBoy,int age,double[] character) {
+        analysisCharacter();
         // 让myView切换图片，重绘图片
         //发型
         drawHair(isBoy,age,character);
@@ -123,23 +151,44 @@ public class DrawActivity extends FragmentActivity {
         //背景
         drawBackGround(isBoy,age,character);
         customView.invalidate();
+        String result="分析结果：\n";
+        for(int i=0;i<character.length;i++) {
+            if(character[i]!=0) {
+                result+=characters[i]+"  --  "+(int)(character[i])+"\n";
+            }
+        }
+        SpannableString msp = new SpannableString(result);
+
+        //设置字体(default,default-bold,monospace,serif,sans-serif)
+        msp.setSpan(new TypefaceSpan("monospace"), 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        msp.setSpan(new ForegroundColorSpan(Color.WHITE), 0, result.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);  //设置前景色为洋红色
+        //msp.setSpan(new TypefaceSpan("serif"), 2, 4, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        // textView.setText(result);
+        textView.setText(msp);
     }
 
     private void drawHair(boolean isBoy,int age,double[] character){
         int[] hair;
+        double[][] characterData;
         if(isBoy){
             hair = MyResourse.getBoyHair();
+            characterData=QueryData.getS1CharacterData();
         }else{
             if(isYoungAge(age)){
                 hair = MyResourse.getYoungAgeGirlHair();
+                characterData=QueryData.getS2YoungCharacterData();
             }else if(isMiddleAge(age)){
                 hair = MyResourse.getMiddleAgeGirlHair();
+                characterData=QueryData.getS2MiddleCharacterData();
             } else {
                 hair = MyResourse.getOldAgeGirlHair();
+                characterData=QueryData.getS2OldCharacterData();
             }
         }
         //分析性格最接近的头发图片
         int index = 1;
+        if(!isDefault)
+            index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(), hair[index]);
         customView.bitmap[0] = bm;
         customView.resource[0] = hair[index];
@@ -147,8 +196,11 @@ public class DrawActivity extends FragmentActivity {
 
     private void drawFaceShape(boolean isBoy,int age,double[] character){
         int[] faceshape = MyResourse.getFaceShape();
+        double[][] characterData=QueryData.getS5CharacterData();
         //分析性格最接近的脸型图片
         int index = 7;
+        if(!isDefault)
+            index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),faceshape[index]);
         customView.bitmap[1]= bm;
         customView.resource[1] = faceshape[index];
@@ -156,8 +208,11 @@ public class DrawActivity extends FragmentActivity {
 
     private void drawEyeBrow(boolean isBoy,int age,double[] character){
         int[] eyebrow = MyResourse.getEyeBrow();
+        double[][] characterData=QueryData.getS6CharacterData();
         //分析性格最接近的眉毛图片
         int index = 0;
+        if(!isDefault)
+            index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),eyebrow[index]);
         customView.bitmap[2]= bm;
         customView.resource[2] = eyebrow[index];
@@ -165,8 +220,11 @@ public class DrawActivity extends FragmentActivity {
 
     private void drawEye(boolean isBoy,int age,double[] character){
         int[] eye = MyResourse.getEye();
+        double[][] characterData=QueryData.getS7CharacterData();
         //分析性格最接近的眼睛图片
         int index = 0;
+        if(!isDefault)
+            index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),eye[index]);
         customView.bitmap[3]= bm;
         customView.resource[3] = eye[index];
@@ -174,19 +232,26 @@ public class DrawActivity extends FragmentActivity {
 
     private void drawMouth(boolean isBoy,int age,double[] character){
         int[] mouth;
+        double[][] characterData;
         if(isYoungAge(age)){
             mouth = MyResourse.getYoungAgeMouth();
+            characterData=QueryData.getS8CharacterData();
         }else if(isMiddleAge(age)){
             if(isBoy){
                 mouth = MyResourse.getMiddleAgeBoyMouth();
+                characterData=QueryData.getS9CharacterData();
             }else{
                 mouth = MyResourse.getMiddleAgeGirlMouth();
+                characterData=QueryData.getS10CharacterData();
             }
         }else{
             mouth = MyResourse.getOldAgeMouth();
+            characterData=QueryData.getS11CharacterData();
         }
         //分析性格最接近的嘴唇图片
         int index = 3;
+        if(!isDefault)
+            index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),mouth[index]);
         customView.bitmap[4]= bm;
         customView.resource[4] = mouth[index];
@@ -194,13 +259,34 @@ public class DrawActivity extends FragmentActivity {
 
     private void drawClothes(boolean isBoy,int age,double[] character){
         int[] clothes;
+        double[][] characterData;
         if(isBoy){
-            clothes = MyResourse.getBoyClothes();
+            if(isYoungAge(age)){
+                clothes = MyResourse.getYoungBoyClothes();
+                characterData=QueryData.getS12YoungCharacterData();
+            }else if(isMiddleAge(age)){
+                clothes = MyResourse.getMiddleBoyClothes();
+                characterData=QueryData.getS12MiddleCharacterData();
+            }else{
+                clothes = MyResourse.getOldBoyClothes();
+                characterData=QueryData.getS12OldCharacterData();
+            }
         }else{
-            clothes = MyResourse.getGirlClothes();
+            if(isYoungAge(age)){
+                clothes = MyResourse.getYoungGirlClothes();
+                characterData=QueryData.getS13YoungCharacterData();
+            }else if(isMiddleAge(age)){
+                clothes = MyResourse.getMiddleGirlClothes();
+                characterData=QueryData.getS13MiddleCharacterData();
+            }else{
+                clothes = MyResourse.getOldGirlClothes();
+                characterData=QueryData.getS13OldCharacterData();
+            }
         }
         //分析性格最接近的衣服图片
         int index = 7;
+        if(!isDefault)
+            index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),clothes[index]);
         customView.bitmap[5]= bm;
         customView.resource[5] = clothes[index];
@@ -236,7 +322,107 @@ public class DrawActivity extends FragmentActivity {
         return false;
     }
 
-    public void analysisCharacter(){
+    //初始化性格分析列表
+    private void initCharacters() {
+        int[][] characters={
+                {8,6,12,11,0,4,12},
+                {-1,4,12,6,-1,3,-1},
+                {-1,10,9,13,10,10,-1},
+                {8,6,12,13,6,3,5},
+                {2,6,1,11,6,4,5},
+                {8,6,7,13,0,3,-1},
+                {12,6,7,13,0,4,5},
+                {8,-1,12,13,0,3,5},
+                {2,-1,12,13,0,11,-1},
+                {-1,2,-1,4,0,-1,-1},};
+        characterMap.put("交响乐",characters[0]);
+        characterMap.put("摇滚",characters[1]);
+        characterMap.put("进行曲",characters[2]);
+        characterMap.put("流行",characters[3]);
+        characterMap.put("古典",characters[4]);
+        characterMap.put("爵士",characters[5]);
+        characterMap.put("乡村音乐",characters[6]);
+        characterMap.put("舞曲",characters[7]);
+        characterMap.put("歌剧戏曲二人转",characters[8]);
+        characterMap.put("儿童歌谣",characters[9]);
+    }
 
+    public void analysisCharacter(){
+        for(int i=0;i<character.length;i++)
+            character[i]=0;
+        SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
+        ArrayList<ListenRecord> listenRecord = QueryData.getListenRecordByAccount(useraccount,dbHelper);
+        ListenRecord entry;
+        for(int i = 0;i < listenRecord.size(); i ++){
+            entry = listenRecord.get(i);
+            //获取歌曲时长
+            double songTime=entry.getSong().getTime();
+            //获取听此首歌曲的总时长
+            double totalTime=entry.getTime();
+            //获取歌曲风格
+            String style=entry.getSong().getStyle();
+            //获取此风格歌曲的每种情感对应的性格分析列表
+            int[] characterArray=characterMap.get(style);
+            //歌曲标签（即情感）列表
+            String[] labelArray =entry.getSong().getLabel();
+            //逐标签分析
+            for(int j=0;j<labelArray.length;j++) {
+                //获得此种标签在标签列表中的下标
+                int index=getLabelIndex(labelArray[j]);
+                //如果有对应的类型分析，就根据标签下标，
+                // 在性格分析列表中寻找对应的性格分析结果，
+                // 并将权重加入到最终结果上
+                if(characterArray[index]>=0) {
+                    character[characterArray[index]]=character[characterArray[index]]+totalTime/songTime;
+                }
+            }
+        }
+        character=changeToWeight(character);
+    }
+
+    //获得相应标签在标签列表中的下标
+    private int getLabelIndex(String label) {
+        for(int i=0;i<labels.length;i++) {
+            if(label.equals(labels[i]))
+                return i;
+        }
+        return -1;
+    }
+
+    //根据听歌记录分析出的性格权重标准化
+    private double[] changeToWeight(double[] character) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        double total=0;
+        for(int i=0;i<character.length;i++) {
+            total+=character[i];
+        }
+        if(total>0) {//权重总和不为零
+            for(int j=0;j<character.length;j++) {
+                character[j]=Double.parseDouble(df.format(character[j]/total))*100;
+            }
+        }
+        else //权重总和为零，说明没有记录无法分析，设置成默认显示
+            isDefault=true;
+        return character;
+    }
+
+    //寻找最近接图片的下标
+    private int getClosestPicture(double[][] data,double[] character) {
+        //记录最小的差距
+        double minDifference=Double.MAX_VALUE;
+        //记录最接近图片的下标
+        int index=-1;
+        //遍历图片数据，寻找差距最小（即最接近）的图片
+        for(int i = 0;i < data.length;i ++) {
+            double difference=0;
+            for(int j=0;j<character.length;j++) {
+                difference+=Math.pow(character[j]-data[i][j],2);
+            }
+            if(difference<minDifference) {//不断替换最小差距
+                minDifference=difference;
+                index=i;
+            }
+        }
+        return index;
     }
 }

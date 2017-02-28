@@ -17,17 +17,21 @@ public class DummyContent {
      * An array of sample (dummy) items.
      */
     public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final String[] SONGNAMES = {"groaning the blues","what kind od woman is this","A lot to learn about living",
+            "Friday Night","Make U love me","Good life","opera 2","西厢记","小蜜蜂","捉泥鳅",
+            "暴风雨","蓝色多瑙河","英雄交响曲","悲怆交响曲","拉德斯基进行曲","义勇军进行曲","日不落",
+            "倾尽天下","演员","Sugar","怒放的生命"};
 
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 25;
+    private static final int COUNT = 21;
 
     static {
         // Add some sample items.
-        for (int i = 1; i <= COUNT; i++) {
+        for (int i = 0; i < COUNT; i++) {
             addItem(createDummyItem(i));
         }
     }
@@ -38,7 +42,7 @@ public class DummyContent {
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), "Item " + position, makeDetails(position));
+        return new DummyItem(String.valueOf(position), SONGNAMES[position], makeDetails(position));
     }
 
     private static String makeDetails(int position) {

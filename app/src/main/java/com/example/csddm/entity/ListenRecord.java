@@ -5,14 +5,14 @@ package com.example.csddm.entity;
  */
 
 public class ListenRecord {
-    private int time;
+    private double time;
     private Song song;
 
-    public int getTime() {
+    public double getTime() {
         return time;
     }
 
-    public void setTime(int time) {
+    public void setTime(double time) {
         this.time = time;
     }
 

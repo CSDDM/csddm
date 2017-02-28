@@ -1,44 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
-    <TextView
-        android:id="@+id/lyric"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_weight="1">
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_listenmusic"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="4"
-        android:layout_gravity="center"
-        android:text=""/>
+        android:layout_gravity="top|right"
+        android:layout_margin="@dimen/fab_margin"
+        android:foreground="@drawable/unity" />
+
+    <TextView
+        android:id="@+id/lyric_listenmusic"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="@drawable/text_view_border"
+        android:gravity="center"
+        android:lineSpacingMultiplier="2"
+        android:scrollbars="vertical"
+        android:text="" />
+    </android.support.design.widget.CoordinatorLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_weight="1"
-        android:orientation="horizontal" >
+        android:layout_weight="6"
+        android:orientation="horizontal">
+        <SeekBar
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/seekbar_listenmusic"/>
+
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_weight="6"
+        android:orientation="horizontal">
+
         <Button
             android:id="@+id/last"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="上一曲" />
+
         <Button
             android:id="@+id/play"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="从头播放" />
+
+        <Button
+            android:id="@+id/pause"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="播放/暂停" />
+
         <Button
             android:id="@+id/next"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="下一曲" />
-
-
-
-
-        </LinearLayout>>
-
-
+    </LinearLayout>
 
 </LinearLayout>

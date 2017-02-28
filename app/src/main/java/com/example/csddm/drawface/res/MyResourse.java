@@ -8,7 +8,7 @@ import com.example.csddm.R;
 
 public class MyResourse {
 
-    public static final String TAG_TYEP ="image_type";
+    //public static final String TAG_TYEP ="image_type";
     public static final String TAG_ISBOY ="isBoy";
     public static final String TAG_AGE = "age";
 
@@ -27,11 +27,79 @@ public class MyResourse {
     static int [] middleAgeBoyMouth;//s9
     static int [] middleAgeGirlMouth;//s10
     static int [] oldAgeMouth;//s11
-    static int [] boyClothes;//s12
-    static int [] girlClothes;//s13
+    static int [] youngBoyClothes;//s12
+    static int [] middleBoyClothes;
+    static int [] oldBoyClothes;
+    static int [] youngGirlClothes;//s13
+    static int [] middleGirlClothes;
+    static int [] oldGirlClothes;
     static int [] background;//s14
     static int [] boy_default;
     static int [] girl_default;
+
+    //歌曲资源
+    static int [] song;
+    static int [] lyric;
+
+    public static int [] getSong(){
+        if(song==null){
+            song = new int[]{
+                    R.raw.song_11,
+                    R.raw.song_12,
+                    R.raw.song_13,
+                    R.raw.song_14,
+                    R.raw.song_15,
+                    R.raw.song_16,
+                    R.raw.song_17,
+                    R.raw.song_18,
+                    R.raw.song_19,
+                    R.raw.song_20,
+                    R.raw.song_11,
+                    R.raw.song_12,
+                    R.raw.song_13,
+                    R.raw.song_14,
+                    R.raw.song_15,
+                    R.raw.song_16,
+                    R.raw.song_17,
+                    R.raw.song_18,
+                    R.raw.song_19,
+                    R.raw.song_20,
+                    R.raw.song_21
+            };
+        }
+        return song;
+    }
+
+    public static int [] getLyric(){
+        if(lyric==null){
+            lyric = new int[]{
+                    R.raw.lyric_1,
+                    R.raw.lyric_2,
+                    R.raw.lyric_3,
+                    R.raw.lyric_4,
+                    R.raw.lyric_5,
+                    R.raw.lyric_6,
+                    R.raw.lyric_7,
+                    R.raw.lyric_8,
+                    R.raw.lyric_9,
+                    R.raw.lyric_10,
+                    R.raw.lyric_11,
+                    R.raw.lyric_12,
+                    R.raw.lyric_13,
+                    R.raw.lyric_14,
+                    R.raw.lyric_15,
+                    R.raw.lyric_16,
+                    R.raw.lyric_17,
+                    R.raw.lyric_18,
+                    R.raw.lyric_19,
+                    R.raw.lyric_20,
+                    R.raw.lyric_21
+            };
+        }
+        return lyric;
+    }
+
+
     /*获取boy发型的图片地址数组
      * */
     public static int [] getBoyHair(){
@@ -298,56 +366,84 @@ public class MyResourse {
     /*
      * 获取boy衣服图片数组
      */
-    public static int[] getBoyClothes(){
-        if(boyClothes == null){
-            boyClothes = new int[]{
+    public static int[] getYoungBoyClothes(){
+        if(youngBoyClothes == null){
+            youngBoyClothes = new int[]{
                     R.drawable.pic_s12_0,
                     R.drawable.pic_s12_1,
                     R.drawable.pic_s12_2,
                     R.drawable.pic_s12_3,
                     R.drawable.pic_s12_4,
                     R.drawable.pic_s12_5,
-                    R.drawable.pic_s12_6,
+                    R.drawable.pic_s12_6
+            };
+        }
+        return youngBoyClothes;
+    }
+    public static int[] getMiddleBoyClothes(){
+        if(middleBoyClothes == null){
+            middleBoyClothes = new int[]{
                     R.drawable.pic_s12_7,
                     R.drawable.pic_s12_8,
                     R.drawable.pic_s12_9,
                     R.drawable.pic_s12_10,
                     R.drawable.pic_s12_11,
-                    R.drawable.pic_s12_12,
-                    R.drawable.pic_s12_13,
-                    R.drawable.pic_s12_14
+                    R.drawable.pic_s12_12
             };
         }
-        return boyClothes;
+        return middleBoyClothes;
+    }
+    public static int[] getOldBoyClothes(){
+        if(oldBoyClothes == null){
+            oldBoyClothes = new int[]{
+                    R.drawable.pic_s12_13,
+                    R.drawable.pic_s12_14,
+                    R.drawable.pic_s12_15,
+                    R.drawable.pic_s12_16
+            };
+        }
+        return oldBoyClothes;
     }
 
     /**
      * 获取girl衣服图片数组
      */
 
-    public static int[] getGirlClothes(){
-        if(girlClothes == null){
-            girlClothes = new int[]{
+    public static int[] getYoungGirlClothes(){
+        if(youngGirlClothes == null){
+            youngGirlClothes = new int[]{
                     R.drawable.pic_s13_0,
                     R.drawable.pic_s13_1,
                     R.drawable.pic_s13_2,
                     R.drawable.pic_s13_3,
                     R.drawable.pic_s13_4,
-                    R.drawable.pic_s13_5,
+                    R.drawable.pic_s13_5
+            };
+        }
+        return youngGirlClothes;
+    }
+    public static int[] getMiddleGirlClothes(){
+        if(middleGirlClothes == null){
+            middleGirlClothes = new int[]{
                     R.drawable.pic_s13_6,
                     R.drawable.pic_s13_7,
                     R.drawable.pic_s13_8,
                     R.drawable.pic_s13_9,
-                    R.drawable.pic_s13_10,
-                    R.drawable.pic_s13_11,
-                    R.drawable.pic_s13_12,
-                    R.drawable.pic_s13_13,
-                    R.drawable.pic_s13_14
+                    R.drawable.pic_s13_10
             };
         }
-        return girlClothes;
+        return middleGirlClothes;
     }
-
+    public static int[] getOldGirlClothes(){
+        if(oldGirlClothes == null){
+            oldGirlClothes = new int[]{
+                    R.drawable.pic_s13_11,
+                    R.drawable.pic_s13_12,
+                    R.drawable.pic_s13_13
+            };
+        }
+        return oldGirlClothes;
+    }
 
     /**
      * 获取背景图片数组

@@ -36,7 +36,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm_db",null,2);
+        SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("account",account);
@@ -47,6 +47,7 @@ public class RegisterActivity extends AppCompatActivity {
             Log.i("chackRegister", "用户已存在");
             return;
         }
+        db.close();
         Intent intent = new Intent(this, MenuActivity.class);
         intent.putExtra(MenuActivity.TAG_USERACCOUNT, account);
         intent.putExtra(MenuActivity.TAG_USENAME, name);
