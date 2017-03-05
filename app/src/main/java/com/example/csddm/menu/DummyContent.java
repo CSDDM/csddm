@@ -1,5 +1,12 @@
 package com.example.csddm.menu;
 
+import android.content.Intent;
+import android.util.Log;
+
+import com.example.csddm.LoginActivity;
+import com.example.csddm.web.GetMenuListWeb;
+import com.example.csddm.web.LoginWeb;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,24 +23,58 @@ public class DummyContent {
     /**
      * An array of sample (dummy) items.
      */
-    public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
-    public static final String[] SONGNAMES = {"groaning the blues","what kind od woman is this","A lot to learn about living",
-            "Friday Night","Make U love me","Good life","opera 2","西厢记","小蜜蜂","捉泥鳅",
-            "暴风雨","蓝色多瑙河","英雄交响曲","悲怆交响曲","拉德斯基进行曲","义勇军进行曲","日不落",
-            "倾尽天下","演员","Sugar","怒放的生命"};
+    private static  List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static  ArrayList<String> SONGIDS = new ArrayList<String>();
+    private static  ArrayList<String> SONGNAMES = new ArrayList<String>();
 
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
 
-    private static final int COUNT = 21;
+    private static int COUNT = 0;
 
-    static {
+    public DummyContent() {
+        //initial menu value-lists
+        // 子线程接收数据，主线程修改数据
+        class MyGetMenuListThread extends Thread {
+            private boolean isDone = false;
+            @Override
+            public void run() {
+                ArrayList<ArrayList<String>> info;
+                info = GetMenuListWeb.getMenuList();
+                if (info==null) {
+                    Log.i("DummyContent","music menu is empty!");
+                } else {
+                    COUNT=info.size();
+                    for(int i=0;i<COUNT;i++){
+                        SONGIDS.add(info.get(i).get(0));
+                        SONGNAMES.add(info.get(i).get(1));
+                    }
+                    Log.i("DummyContent",COUNT+"");
+                }
+                isDone = true;
+            }
+
+            public boolean getIsDone(){
+                return isDone;
+            }
+        }
+        // 创建子线程，分别进行Get和Post传输
+        MyGetMenuListThread thread =  new MyGetMenuListThread();
+        thread.start();
+        while(!thread.getIsDone()){
+
+        }
+
         // Add some sample items.
         for (int i = 0; i < COUNT; i++) {
             addItem(createDummyItem(i));
         }
+    }
+
+    public List<DummyItem> getItems(){
+        return ITEMS;
     }
 
     private static void addItem(DummyItem item) {
@@ -42,7 +83,7 @@ public class DummyContent {
     }
 
     private static DummyItem createDummyItem(int position) {
-        return new DummyItem(String.valueOf(position), SONGNAMES[position], makeDetails(position));
+        return new DummyItem(String.valueOf(position), SONGNAMES.get(position), makeDetails(position));
     }
 
     private static String makeDetails(int position) {

@@ -26,6 +26,12 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 +"account varchar(50) primary key NOT NULL,"
                 +"name varchar(50) NOT NULL,"
                 +"password varchar(50) NOT NULL)";
+        final String CREATE_SINGER_TABLE = "create table singer ("
+                +"singerid varchar(8) primary key NOT NULL,"
+                +"name varchar(30),"
+                +"gender varchar(10),"
+                +"birth varchar(50),"
+                +"nation varchar(30) )";
         final String CREATE_SONG_TABLE = "create table song ("
                 +"songid varchar(8) primary key NOT NULL,"
                 +"name varchar(50) NOT NULL,"
@@ -38,12 +44,6 @@ public class SQLiteHelper extends SQLiteOpenHelper {
                 +"lyric varchar(100),"
                 +"time int,"
                 +"singerid varchar(8) REFERENCES singer(singerid) )";//外键
-        final String CREATE_SINGER_TABLE = "create table singer ("
-                +"singerid varchar(8) primary key NOT NULL,"
-                +"name varchar(30),"
-                +"gender varchar(10),"
-                +"birth varchar(50),"
-                +"nation varchar(30) )";
         final String CREATE_LISTENRECORD_TABLE = "create table listen_record ("
                 +"recordid vrachar(8) primary key NOT NULL,"
                 +"account varchar(50) NOT NULL REFERENCES user(account),"
@@ -63,11 +63,8 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }
     }
 
-    private void tmp(SQLiteDatabase db){
-
-
-        Log.e(TAG,"SQLitehelper onCreate!");
-
+    @Override
+    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         try{
             db.execSQL("drop table user");
             Log.e(TAG,"dropUserTable OK!");
@@ -80,10 +77,5 @@ public class SQLiteHelper extends SQLiteOpenHelper {
         }catch(SQLException se){
             se.printStackTrace();
         }
-    }
-
-    @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-
     }
 }

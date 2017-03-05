@@ -28,4 +28,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile 'com.android.support:design:25.1.0'
     compile files('src/main/libs/sqlite-jdbc-3.8.7.jar')
+    compile files('src/main/libs/unity-classes.jar')
 }

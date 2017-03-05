@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_login"
+    android:theme="@android:style/Theme.Translucent"
+    android:background="@drawable/bk3"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:gravity="center_vertical"
@@ -8,66 +10,68 @@
     <TableRow>
         <TextView />
         <TextView
-            android:text="账   号："
-            android:textSize="22sp"
-            android:layout_width="wrap_content"
+            android:text="    账   号："
+            android:textSize="20sp"
+            android:layout_width="120sp"
             android:layout_height="wrap_content"
             />
         <EditText
             android:id="@+id/account_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="22sp"
-            android:minWidth="100sp"/>
+            android:textSize="20sp"
+            android:minWidth="120sp"/>
         <TextView />
     </TableRow>
     <TableRow android:layout_marginTop="20dp">
         <TextView />
         <TextView
-            android:text="密  码："
-            android:textSize="22sp"
+            android:text="    密   码："
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             />
+
         <EditText
             android:id="@+id/password_login"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:minWidth="100sp"
-            android:textSize="22sp"
+            android:textSize="20sp"
             android:inputType="textPassword"/>
+
         <TextView />
     </TableRow>
-    <TableRow android:layout_marginTop="20dp">
+    <TableRow android:layout_marginTop="30dp">
         <TextView />
         <Button
             android:id="@+id/login_login"
+            android:background="@drawable/shape"
             android:text="登录"
             android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="skipToMenu"
             />
         <Button
             android:id="@+id/register_login"
+            android:background="@drawable/shape"
             android:text="注册"
             android:textSize="15sp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="skipToRegister"/>
+            android:layout_height="wrap_content"/>
         <TextView />
     </TableRow>
-    <TableRow android:layout_marginTop="20dp">
+    <TableRow android:layout_marginTop="30dp">
         <TextView />
         <Button
             android:id="@+id/guest_login"
+            android:background="@drawable/shape"
             android:layout_column="1"
             android:layout_span="2"
             android:text="游客身份登陆"
             android:textSize="15sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="skipToMenuTour"
             />
         <TextView />
     </TableRow>

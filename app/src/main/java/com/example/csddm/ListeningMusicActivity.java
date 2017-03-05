@@ -2,6 +2,7 @@ package com.example.csddm;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.support.design.widget.FloatingActionButton;
@@ -17,8 +18,12 @@ import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
+import com.example.csddm.drawface.DrawActivity;
 import com.example.csddm.drawface.res.MyResourse;
+import com.example.csddm.menu.DummyContent;
 import com.example.csddm.menu.MenuActivity;
+import com.example.csddm.web.GetSongWeb;
+import com.example.csddm.web.IPWeb;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -26,34 +31,37 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 public class ListeningMusicActivity extends AppCompatActivity {       //声名变量
-    public static final String TAG_MUSICINDEX ="musicIndex";
+    public static final String TAG_MUSICINDEX = "musicIndex";
+    private final String ROOTPATH = "http://" + IPWeb.IP + "/SYCserver/";
     private int musicindex;//记录当前音乐在音乐列表中的下标
     private String useraccount;
     private Button start = null;
     private Button pause = null;
-    private ArrayList<String> musicList = null;
     private Button last = null;
     private Button next = null;
     private MediaPlayer mp3;
     SeekBar seekBar;
     private boolean flag = false; //设置标记，false表示正在播放
     private boolean isChanging = false;//互斥变量，防止定时器与seekbar拖动时进度冲突
-    final private int [] song = MyResourse.getSong();
-    final private int[] lyric = MyResourse.getLyric();
+    final private ArrayList<String> SONGIDS = DummyContent.SONGIDS;
+    private String songpath;
+    private String lyric;
     private Timer mTimer;
     private TimerTask mTimerTask;
+    ArrayList<HashMap<String, String>> info;//获取网络音乐与歌词资源
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_listening_music);
         Intent intent = getIntent();
-        musicindex = intent.getIntExtra(TAG_MUSICINDEX,0);
-        Log.i("musicIndex",""+musicindex);
+        musicindex = intent.getIntExtra(TAG_MUSICINDEX, 0);
+        Log.i("musicIndex", "" + musicindex);
         useraccount = intent.getStringExtra(MenuActivity.TAG_USERACCOUNT);
         //取得各按钮组件
         start = (Button) super.findViewById(R.id.play);
@@ -65,13 +73,16 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
         pause.setOnClickListener(new OnClickListenerPause());
         last.setOnClickListener(new OnClickListenerLast());
         next.setOnClickListener(new OnClickListenerNext());
+        //获取当前歌曲与歌词
+        this.getSongLyric(SONGIDS.get(musicindex));
         //设置歌词
-        TextView textView = (TextView)findViewById(R.id.lyric_listenmusic);
-        textView.setText(getString(getResources().openRawResource(lyric[musicindex])));
+        TextView textView = (TextView) findViewById(R.id.lyric_listenmusic);
+        textView.setText(lyric);
         textView.setMovementMethod(ScrollingMovementMethod.getInstance());
         mp3 = new MediaPlayer();    //创建一个MediaPlayer对象
-        //在res下新建一个raw文件夹把一首歌放到此文件夹中并用英文命名
-        mp3 = MediaPlayer.create(ListeningMusicActivity.this, song[musicindex]);
+        Uri uri = Uri.parse(ROOTPATH + songpath);
+        mp3 = MediaPlayer.create(this, uri);
+
         startMusic();
         //悬浮框用于点击进入歌曲3D场景界面
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_listenmusic);
@@ -80,36 +91,48 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
             public void onClick(View view) {
                 Snackbar.make(view, "歌曲3D场景", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+                Intent intent = new Intent(".DrawUnityActivity");
+                startActivity(intent);
             }
         });
         //滚动条
-        seekBar = (SeekBar)findViewById(R.id.seekbar_listenmusic);
+        seekBar = (SeekBar) findViewById(R.id.seekbar_listenmusic);
         seekBar.setOnSeekBarChangeListener(new MySeekbar());
 
     }
 
-    public String getString(InputStream inputStream){
-        InputStreamReader inputStreamReader = null;
-        try{
-            inputStreamReader = new InputStreamReader(inputStream,"gbk");
-        }catch(UnsupportedEncodingException e1){
-            e1.printStackTrace();
-        }
-        BufferedReader reader = new BufferedReader(inputStreamReader);
-        StringBuffer sb = new StringBuffer("");
-        String line;
-        try{
-            while((line = reader.readLine())!=null){
-                sb.append(line);
-                sb.append("\n");
+    public class MyGetSongLyricThread extends Thread {
+        private boolean isDone = false;
+
+        @Override
+        public void run() {
+            info = GetSongWeb.getSongLyric(SONGIDS.get(musicindex));
+            Log.i("SONGID",""+SONGIDS.get(musicindex));
+            if (info == null) {
+                Log.i("ListenMusic", "song and lyric is empty!");
+            } else {
+                songpath = info.get(0).get("songpath");
+                lyric = info.get(1).get("lyric");
             }
-        }catch(IOException e){
-            e.printStackTrace();
+            isDone = true;
         }
-        return sb.toString();
+
+        public boolean getIsDone() {
+            return isDone;
+        }
     }
 
-    public void startMusic(){
+
+    public void getSongLyric(String songid) {
+        // 创建子线程，分别进行Get和Post传输
+        MyGetSongLyricThread thread = new MyGetSongLyricThread();
+        thread.start();
+        while (!thread.getIsDone()) {
+
+        }
+    }
+
+    public void startMusic() {
         try {
             if (mp3 != null) {
                 mp3.stop();
@@ -124,13 +147,13 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
             mTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    if(isChanging==true){
+                    if (isChanging == true) {
                         return;
                     }
                     seekBar.setProgress(mp3.getCurrentPosition());
                 }
             };
-            mTimer.schedule(mTimerTask,0,10);
+            mTimer.schedule(mTimerTask, 0, 10);
             //开始播放
             //state.setText("Playing");  //改变输出信息为“Playing”，下同
         } catch (Exception e) {
@@ -156,10 +179,9 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
 
                 mp3.start();
                 //开始播放
-                //state.setText("Playing");  //改变输出信息为“Playing”，下同
+
             } catch (Exception e) {
-                //state.setText(e.toString());//以字符串的形式输出异常
-                e.printStackTrace();  //在控制台（control）上打印出异常
+                 e.printStackTrace();  //在控制台（control）上打印出异常
             }
         }
     }
@@ -216,10 +238,12 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
         @Override
         public void onClick(View v) {
             mp3.stop();
-            musicindex = (musicindex-1+song.length)%song.length;
-            mp3 = MediaPlayer.create(ListeningMusicActivity.this, song[musicindex]);
-            TextView textView = (TextView)findViewById(R.id.lyric_listenmusic);
-            textView.setText(getString(getResources().openRawResource(lyric[musicindex])));
+            musicindex = (musicindex - 1 + SONGIDS.size()) % SONGIDS.size();
+            getSongLyric(SONGIDS.get(musicindex));
+            Uri uri = Uri.parse(ROOTPATH + songpath);
+            mp3 = MediaPlayer.create(ListeningMusicActivity.this, uri);
+            TextView textView = (TextView) findViewById(R.id.lyric_listenmusic);
+            textView.setText(lyric);
             startMusic();
         }
     }
@@ -228,24 +252,26 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
         @Override
         public void onClick(View v) {
             mp3.stop();
-            musicindex = (musicindex+1+song.length)%song.length;
-            mp3 = MediaPlayer.create(ListeningMusicActivity.this, song[musicindex]);
-            TextView textView = (TextView)findViewById(R.id.lyric_listenmusic);
-            textView.setText(getString(getResources().openRawResource(lyric[musicindex])));
+            musicindex = (musicindex + 1 + SONGIDS.size()) % SONGIDS.size();
+            getSongLyric(SONGIDS.get(musicindex));
+             Uri uri = Uri.parse(ROOTPATH + songpath);
+            mp3 = MediaPlayer.create(ListeningMusicActivity.this, uri);
+            TextView textView = (TextView) findViewById(R.id.lyric_listenmusic);
+            textView.setText(lyric);
             startMusic();
         }
     }
 
-    class MySeekbar implements SeekBar.OnSeekBarChangeListener{
-        public void onProgressChanged(SeekBar seekBar,int progress,boolean fromUser){
+    class MySeekbar implements SeekBar.OnSeekBarChangeListener {
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
 
         }
 
-        public void onStartTrackingTouch(SeekBar seekBar){
-            isChanging=true;
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            isChanging = true;
         }
 
-        public void onStopTrackingTouch(SeekBar seekBar){
+        public void onStopTrackingTouch(SeekBar seekBar) {
             mp3.seekTo(seekBar.getProgress());
             isChanging = false;
         }

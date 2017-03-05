@@ -284,7 +284,7 @@ public class DrawActivity extends AppCompatActivity {
             }
         }
         //分析性格最接近的衣服图片
-        int index = 7;
+        int index = 0;
         if(!isDefault)
             index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),clothes[index]);
@@ -351,7 +351,7 @@ public class DrawActivity extends AppCompatActivity {
         for(int i=0;i<character.length;i++)
             character[i]=0;
         SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
-        ArrayList<ListenRecord> listenRecord = QueryData.getListenRecordByAccount(useraccount,dbHelper);
+        ArrayList<ListenRecord> listenRecord = new QueryData().getListenRecordByAccount(useraccount,dbHelper);
         ListenRecord entry;
         for(int i = 0;i < listenRecord.size(); i ++){
             entry = listenRecord.get(i);

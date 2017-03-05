@@ -4,8 +4,7 @@
     android:id="@+id/activity_persona"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:orientation="vertical">
 
     <!-- 主要绘图的区域 -->
 

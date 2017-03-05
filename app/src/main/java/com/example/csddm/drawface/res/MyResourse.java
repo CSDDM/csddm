@@ -37,68 +37,6 @@ public class MyResourse {
     static int [] boy_default;
     static int [] girl_default;
 
-    //歌曲资源
-    static int [] song;
-    static int [] lyric;
-
-    public static int [] getSong(){
-        if(song==null){
-            song = new int[]{
-                    R.raw.song_11,
-                    R.raw.song_12,
-                    R.raw.song_13,
-                    R.raw.song_14,
-                    R.raw.song_15,
-                    R.raw.song_16,
-                    R.raw.song_17,
-                    R.raw.song_18,
-                    R.raw.song_19,
-                    R.raw.song_20,
-                    R.raw.song_11,
-                    R.raw.song_12,
-                    R.raw.song_13,
-                    R.raw.song_14,
-                    R.raw.song_15,
-                    R.raw.song_16,
-                    R.raw.song_17,
-                    R.raw.song_18,
-                    R.raw.song_19,
-                    R.raw.song_20,
-                    R.raw.song_21
-            };
-        }
-        return song;
-    }
-
-    public static int [] getLyric(){
-        if(lyric==null){
-            lyric = new int[]{
-                    R.raw.lyric_1,
-                    R.raw.lyric_2,
-                    R.raw.lyric_3,
-                    R.raw.lyric_4,
-                    R.raw.lyric_5,
-                    R.raw.lyric_6,
-                    R.raw.lyric_7,
-                    R.raw.lyric_8,
-                    R.raw.lyric_9,
-                    R.raw.lyric_10,
-                    R.raw.lyric_11,
-                    R.raw.lyric_12,
-                    R.raw.lyric_13,
-                    R.raw.lyric_14,
-                    R.raw.lyric_15,
-                    R.raw.lyric_16,
-                    R.raw.lyric_17,
-                    R.raw.lyric_18,
-                    R.raw.lyric_19,
-                    R.raw.lyric_20,
-                    R.raw.lyric_21
-            };
-        }
-        return lyric;
-    }
-
 
     /*获取boy发型的图片地址数组
      * */

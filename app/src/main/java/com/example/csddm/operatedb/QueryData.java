@@ -1,12 +1,21 @@
 package com.example.csddm.operatedb;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Toast;
 
+import com.example.csddm.LoginActivity;
 import com.example.csddm.entity.ListenRecord;
 import com.example.csddm.entity.Song;
+import com.example.csddm.menu.MenuActivity;
+import com.example.csddm.web.GetListenRecordWeb;
+import com.example.csddm.web.LoginWeb;
 
 import java.util.ArrayList;
 
@@ -16,7 +25,7 @@ import java.util.ArrayList;
 
 public class QueryData {
 
-    public static ArrayList<ListenRecord> getListenRecordByAccount(String useraccount, SQLiteHelper dbHelper) {
+   /* public static ArrayList<ListenRecord> getListenRecordByAccount(String useraccount, SQLiteHelper dbHelper) {
         ArrayList<ListenRecord> record = new ArrayList<>();
 
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -60,6 +69,32 @@ public class QueryData {
         }
         db.close();
         return record;
+    }*/
+   private ArrayList<ListenRecord> record = new ArrayList<>();
+    private String useraccount;
+   public  ArrayList<ListenRecord> getListenRecordByAccount(String useraccount, SQLiteHelper dbHelper) {
+       this.useraccount = useraccount;
+       // 检查网络
+       // 创建子线程，分别进行Get和Post传输
+       MyQueryRecordThread thread = new MyQueryRecordThread();
+       thread.start();
+       while(!thread.getIsDone()){
+
+       }
+       return record;
+   }
+
+    // 子线程接收数据，主线程修改数据
+    public class MyQueryRecordThread extends Thread {
+        private boolean isDone = false;
+        @Override
+        public void run() {
+            record = GetListenRecordWeb.getListenRecord(useraccount);
+            isDone=true;
+        }
+        public boolean getIsDone(){
+            return isDone;
+        }
     }
 
     public static double[][] getS1CharacterData() {
