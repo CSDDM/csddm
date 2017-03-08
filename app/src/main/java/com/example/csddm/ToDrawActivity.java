@@ -42,9 +42,6 @@ public class ToDrawActivity extends AppCompatActivity {
         intent.putExtra(MyResourse.TAG_AGE, age);
         intent.putExtra(MyResourse.TAG_ISBOY, isBoy);
         intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
-        Log.i("todraw","age:"+age);
-        Log.i("todraw","isBoy:"+isBoy);
-        Log.i("todraw","account:"+useraccount);
         startActivity(intent);
     }
 

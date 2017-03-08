@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.csddm">
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     　　　　　　
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
+        android:icon="@drawable/app"
+        android:label="音像"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
@@ -18,23 +20,26 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".menu.MenuActivity"
-                    android:label="Menu Activity"
-                    android:theme="@style/AppTheme.NoActionBar">
+        <activity
+            android:name=".menu.MenuActivity"
+            android:label="Menu Activity"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name=".MenuActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListeningMusicActivity"
-            android:label="Listening Music"
+        <activity
+            android:name=".ListeningMusicActivity"
+            android:label="ListeningMusicActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name=".ListeningMusic" />
+                <action android:name=".ListeningMusicActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".ToDrawActivity"
+        <activity
+            android:name=".ToDrawActivity"
             android:label="To Draw"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -42,15 +47,17 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".drawface.DrawActivity"
-            android:label="Draw"
+        <activity
+            android:name=".drawface.DrawActivity"
+            android:label="DrawActivity"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
-                <action android:name=".Draw" />
+                <action android:name=".DrawActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity"
+        <activity
+            android:name=".LoginActivity"
             android:label="Login"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -58,7 +65,8 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity"
+        <activity
+            android:name=".RegisterActivity"
             android:label="Register"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -66,38 +74,52 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".UnityPlayerActivity"
+        <activity
+            android:name=".UnityPlayerActivity"
             android:label="UnityPlayerActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name=".UnityPlayerActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".UnityPlayerNativeActivity"
+        <receiver android:name=".UnityPlayerActivity$FinishUnityBroadcast">  
+            <intent-filter>  
+                <action android:name="android.intent.action.CALL"></action>  
+            </intent-filter>  
+        </receiver>
+        <activity
+            android:name=".UnityPlayerNativeActivity"
             android:label="UnityPlayerNativeActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name=".UnityPlayerNativeActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".UnityPlayerProxyActivity"
+        <activity
+            android:name=".UnityPlayerProxyActivity"
             android:label="UnityPlayerProxyActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name=".UnityPlayerProxyActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-        <activity android:name=".DrawUnityActivity"
+        <activity
+            android:name=".DrawUnityActivity"
             android:label="DrawUnityActivity"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"
+            android:launchMode="singleInstance">
             <intent-filter>
                 <action android:name=".DrawUnityActivity" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+          
     </application>
 
 </manifest>

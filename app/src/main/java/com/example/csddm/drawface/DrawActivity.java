@@ -1,5 +1,6 @@
 package com.example.csddm.drawface;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,9 +9,12 @@ import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -36,6 +40,8 @@ import com.example.csddm.menu.MenuActivity;
 import com.example.csddm.operatedb.QueryData;
 import com.example.csddm.operatedb.SQLiteHelper;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -77,8 +83,52 @@ public class DrawActivity extends AppCompatActivity {
         customView.setDrawingCacheEnabled(true);
         textView=(TextView)findViewById(R.id.result_persona);
         reLayout.addView(customView);
-
+        //悬浮框用于点击进入歌曲3D场景界面
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab_persona);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Snackbar.make(view, "保存图片", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
+                saveImageWithoutChoose(view);
+               // saveImage(view);
+            }
+        });
         draw(isBoy,age,character);
+    }
+
+    public void saveImageWithoutChoose(View v){
+        Bitmap bitmap = customView.getDrawingCache();
+        grantUriPermission(Environment.getExternalStorageDirectory()+"/CSDDM",Uri.parse("file://"+ Environment.getExternalStorageDirectory()),Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        MediaStore.Images.Media.insertImage(getContentResolver(), bitmap, "title", "description");
+        sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.parse("file://"+ Environment.getExternalStorageDirectory())));
+        SaveResource(this, isBoy);
+        Toast.makeText(this, "保存成功\n图片保存在手机图库中", Toast.LENGTH_SHORT)
+                .show();
+    }
+
+    public void saveImage(View v) {
+        Bitmap bitmap = customView.getDrawingCache();
+        File appDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath(), "DCIM/Camera/CSDDM");
+        if (!appDir.exists()) {
+            appDir.mkdirs();
+        }
+        String fileName = System.currentTimeMillis() + ".png";
+        File file = new File(appDir, fileName);
+        try {
+            FileOutputStream fos = new FileOutputStream(file);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, fos);
+            fos.flush();
+            fos.close();
+            // 保存12张图片到sharedPreference
+            SaveResource(this, isBoy);
+            Toast.makeText(this, "保存成功\n图片保存在" + Environment.getExternalStorageDirectory()+"/CSDDM", Toast.LENGTH_SHORT)
+                    .show();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // 点击保存按钮保存自己diy好的图片
@@ -86,10 +136,12 @@ public class DrawActivity extends AppCompatActivity {
         // 对customView截屏并且保存图片到sd卡里
         Bitmap bitmap = customView.getDrawingCache();
         // 给图片命名 以当前时间为准，且以.png格式保存
-        String photoName = System.currentTimeMillis() + ".png";
+        String photoName = "test.png";
+//        String photoName = System.currentTimeMillis() + ".png";
         // 设置保存图片的路径
         String photo_path = Environment.getExternalStorageDirectory()
                 .getAbsolutePath() + "/" + photoName;
+
         try {
             // 创建文件流
             FileOutputStream os = new FileOutputStream(photo_path);
@@ -210,7 +262,7 @@ public class DrawActivity extends AppCompatActivity {
         int[] eyebrow = MyResourse.getEyeBrow();
         double[][] characterData=QueryData.getS6CharacterData();
         //分析性格最接近的眉毛图片
-        int index = 0;
+        int index = 1;
         if(!isDefault)
             index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),eyebrow[index]);
@@ -222,7 +274,7 @@ public class DrawActivity extends AppCompatActivity {
         int[] eye = MyResourse.getEye();
         double[][] characterData=QueryData.getS7CharacterData();
         //分析性格最接近的眼睛图片
-        int index = 0;
+        int index = 1;
         if(!isDefault)
             index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),eye[index]);
@@ -249,7 +301,7 @@ public class DrawActivity extends AppCompatActivity {
             characterData=QueryData.getS11CharacterData();
         }
         //分析性格最接近的嘴唇图片
-        int index = 3;
+        int index = 1;
         if(!isDefault)
             index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),mouth[index]);
@@ -284,7 +336,7 @@ public class DrawActivity extends AppCompatActivity {
             }
         }
         //分析性格最接近的衣服图片
-        int index = 0;
+        int index = 1;
         if(!isDefault)
             index=getClosestPicture(characterData,character);
         Bitmap bm = BitmapFactory.decodeResource(getResources(),clothes[index]);

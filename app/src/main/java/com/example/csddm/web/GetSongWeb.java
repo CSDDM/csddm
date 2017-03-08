@@ -60,6 +60,47 @@ public class GetSongWeb {
         return null;
     }
 
+    // 通过Get方式获取HTTP服务器数据
+    public static ArrayList<HashMap<String, String>> getSongAndStopPlace(String account,String songid,int stopplace) {
+        ArrayList<HashMap<String, String>> list = new ArrayList();
+        HttpURLConnection conn = null;
+        InputStream is = null;
+        try {
+            String path = "http://" + IP + "/SYCserver/GetSong";
+            path += "?songid=" + songid;
+
+            conn = (HttpURLConnection) new URL(path).openConnection();
+            conn.setConnectTimeout(3000); // 设置超时时间
+            conn.setReadTimeout(3000);
+            conn.setDoInput(true);
+            conn.setRequestMethod("GET"); // 设置获取信息方式
+            conn.setRequestProperty("Charset", "UTF-8"); // 设置接收数据编码格式
+            if (conn.getResponseCode() == 200) {
+                is = conn.getInputStream();
+                String responseData = parseInfo(is);
+                //转换成json数据处理
+                JSONArray jsonArray = new JSONArray(responseData);
+                JSONObject jsonObject = jsonArray.getJSONObject(0);
+                HashMap hm = new HashMap();
+                hm.put("songpath", jsonObject.getString("songpath"));
+                list.add(hm);
+                HashMap hm2 = new HashMap();
+                hm2.put("lyric", jsonObject.getString("lyric"));
+                list.add(hm2);
+
+                return list;
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 意外退出时进行连接关闭保护
+            if (conn != null) {
+                conn.disconnect();
+            }
+        }
+        return null;
+    }
 
     // 通过Get方式获取HTTP服务器数据
     public static ArrayList<HashMap<String, String>> getSong(String songid) {

@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.csddm.drawface.res.MyResourse;
 import com.example.csddm.menu.MenuActivity;
 import com.example.csddm.web.LoginWeb;
 
@@ -81,58 +82,22 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
             case R.id.register_login:
                 Intent registerActivity = new Intent(LoginActivity.this, RegisterActivity.class);
                 startActivity(registerActivity);
+                finish();
                 break;
             case R.id.guest_login:
                 Log.i("guest_login","in guest_login");
                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                intent.putExtra(MenuActivity.TAG_USENAME, "游客身份");
+                intent.putExtra(MenuActivity.TAG_USERNAME, "游客身份");
                 startActivity(intent);
+                finish();
                 break;
         }
         ;
     }
 
-
-    public void skipToMenu(View view){
-        //检测身份
-        //传输数据
-        EditText account_login = (EditText)findViewById(R.id.account_login);
-        EditText password_login = (EditText)findViewById(R.id.password_login);
-
-        account = account_login.getText().toString();
-        password = password_login.getText().toString();
-
-        if (!checkNetwork()) {
-            Toast toast = Toast.makeText(LoginActivity.this,"网络未连接", Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        }
-
-        // 创建子线程，分别进行Get和Post传输
-        new Thread(new MyLoginThread()).start();
-
-        /*SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.query("user",new String[]{"name"},"account=? and password=?",
-                new String[]{account,password},null,null,null);
-        String user_name="";
-        while(cursor.moveToNext()){
-            user_name=cursor.getString(cursor.getColumnIndex("name"));
-        }
-        db.close();
-        if(!user_name.equals("")){
-            Intent intent = new Intent(this, MenuActivity.class);
-            intent.putExtra(MenuActivity.TAG_USERACCOUNT, account);
-            intent.putExtra(MenuActivity.TAG_USENAME, user_name);
-            startActivity(intent);
-        }else {//如果用户不存在或者密码账户不匹配
-            Log.i("checkLogin","用户不存在或者账户密码不匹配");
-        }*/
-
-    }
-
     // 子线程接收数据，主线程修改数据
     public class MyLoginThread implements Runnable {
+
         @Override
         public void run() {
             info = LoginWeb.login(account, password);
@@ -140,12 +105,13 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
             if(info==null) {
                 Log.i("info_login", "content is null");
             } else if (info.get(0).get("username").equals("")) {
-                Log.i("REGISTER_FAILURE","登录失败");
+                Log.i("Login","用户不存在或者用户名密码不匹配");
             } else {
                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
                 intent.putExtra(MenuActivity.TAG_USERACCOUNT, account);
-                intent.putExtra(MenuActivity.TAG_USENAME, info.get(0).get("username"));
+                intent.putExtra(MenuActivity.TAG_USERNAME, info.get(0).get("username"));
                 startActivity(intent);
+                finish();
             }
         }
     }

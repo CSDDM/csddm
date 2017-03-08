@@ -55,25 +55,12 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if(!password.equals(repassword)){
-            Log.i("checkRegister","两次密码输入不一致");
+            Toast.makeText(RegisterActivity.this,"两次密码输入不一致", Toast.LENGTH_LONG).show();
             return;
         }
         dialog = new ProgressDialog(this);
         // 创建子线程，分别进行Get和Post传输
         new Thread(new RegisterActivity.MyRegisterThread()).start();
-
-        /*SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("account",account);
-        values.put("name",name);
-        values.put("password",password);
-        long result = db.insert("user",null,values);
-        if(result==0) {
-            Log.i("chackRegister", "用户已存在");
-            return;
-        }
-        db.close();*/
     }
 
     // 子线程接收数据，主线程修改数据
@@ -99,8 +86,9 @@ public class RegisterActivity extends AppCompatActivity {
                     }else{
                         Intent intent = new Intent(RegisterActivity.this,MenuActivity.class);
                         intent.putExtra(MenuActivity.TAG_USERACCOUNT, account);
-                        intent.putExtra(MenuActivity.TAG_USENAME, username);
+                        intent.putExtra(MenuActivity.TAG_USERNAME, username);
                         startActivity(intent);
+                        finish();
                     }
                 }
             });

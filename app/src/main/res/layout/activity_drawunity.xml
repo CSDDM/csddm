@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".DrawUnityActivity">
+    android:background="#E0EEE0"
+    android:gravity="center_horizontal"
+    android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/unity_drawunity"
-        android:layout_width="300dp"
-        android:layout_height="500dp"
-        android:layout_centerInParent="true"
-        >
-    </RelativeLayout>
+    <!-- 3D视图区域 -->
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/u3d_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="#a6a9af"
+        android:orientation="vertical" >
+    </LinearLayout>
+
+
+</LinearLayout>

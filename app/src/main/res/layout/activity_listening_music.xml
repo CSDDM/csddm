@@ -23,10 +23,11 @@
         android:id="@+id/lyric_listenmusic"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:background="@drawable/text_view_border"
+        android:background="@drawable/bk3"
         android:gravity="center"
         android:lineSpacingMultiplier="2"
         android:scrollbars="vertical"
+        android:textSize="20sp"
         android:text="" />
     </android.support.design.widget.CoordinatorLayout>
 

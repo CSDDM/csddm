@@ -25,51 +25,6 @@ import java.util.ArrayList;
 
 public class QueryData {
 
-   /* public static ArrayList<ListenRecord> getListenRecordByAccount(String useraccount, SQLiteHelper dbHelper) {
-        ArrayList<ListenRecord> record = new ArrayList<>();
-
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String args[] = {useraccount};
-        ContentValues cv = new ContentValues();
-        cv.put("account", useraccount);
-        Cursor c = db.rawQuery("SELECT * FROM listen_record WHERE account=?", args);
-        if (c.getCount() != 0) {
-            //do soemthing
-            while (c.moveToNext()) {
-                double time = (double) (c.getInt(c.getColumnIndex("time")));
-                Song song = new Song();
-                song.setSongid(c.getString(c.getColumnIndex("songid")));
-                ListenRecord lr = new ListenRecord();
-                lr.setTime(time);
-                lr.setSong(song);
-                record.add(lr);
-            }
-        }
-        for (ListenRecord lr : record) {
-            String args2[] = {lr.getSong().getSongid()};
-            ContentValues cv2 = new ContentValues();
-            cv2.put("songid", lr.getSong().getSongid());
-            Cursor c2 = db.rawQuery("SELECT * FROM song WHERE songid=?", args2);
-            if (c2.getCount() != 0) {
-                //do soemthing
-                while (c2.moveToNext()) {
-                    String name = c2.getString(c2.getColumnIndex("name"));
-                    double time = (double) (c2.getInt(c2.getColumnIndex("time")));
-                    String style = c2.getString(c2.getColumnIndex("style"));
-                    String label = c2.getString(c2.getColumnIndex("label"));
-                    Song song = lr.getSong();
-                    song.setSongname(name);
-                    song.setStyle(style);
-                    song.setLabel(label);
-                    song.setTime(time);
-                }
-            }
-            c2.close();
-            cv2.clear();
-        }
-        db.close();
-        return record;
-    }*/
    private ArrayList<ListenRecord> record = new ArrayList<>();
     private String useraccount;
    public  ArrayList<ListenRecord> getListenRecordByAccount(String useraccount, SQLiteHelper dbHelper) {
@@ -81,6 +36,7 @@ public class QueryData {
        while(!thread.getIsDone()){
 
        }
+
        return record;
    }
 

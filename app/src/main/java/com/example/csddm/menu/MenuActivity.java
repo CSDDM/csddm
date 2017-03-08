@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -38,11 +39,16 @@ import com.example.csddm.operatedb.SQLiteHelper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG_USERACCOUNT ="user_account";
-    public static final String TAG_USENAME ="user_name";
+    public static final String TAG_USERNAME ="user_name";
+    public static MediaPlayer mp3;
+    public static Timer mTimer;
+    public static TimerTask mTimerTask;
 
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
@@ -97,7 +103,7 @@ public class MenuActivity extends AppCompatActivity
     private void updateUserName(){
         Intent intent = getIntent();
         useraccount = intent.getStringExtra(TAG_USERACCOUNT);
-        username = intent.getStringExtra(TAG_USENAME);
+        username = intent.getStringExtra(TAG_USERNAME);
         LayoutInflater inflater = getLayoutInflater();
         NavigationView view = (NavigationView)findViewById(R.id.nav_view);
         View headerLayout = inflater.inflate(R.layout.nav_header_menu,view);
@@ -154,7 +160,7 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_choosemusic) {
             Intent intent = new Intent(this, ListeningMusicActivity.class);
             intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
-            intent.putExtra(MenuActivity.TAG_USENAME, username);
+            intent.putExtra(MenuActivity.TAG_USERNAME, username);
             startActivity(intent);
         } else if (id == R.id.nav_uploadmusic) {
 
@@ -164,7 +170,7 @@ public class MenuActivity extends AppCompatActivity
         }else if (id == R.id.nav_draw) {
             Intent intent = new Intent(this, ToDrawActivity.class);
             intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
-            intent.putExtra(MenuActivity.TAG_USENAME, username);
+            intent.putExtra(MenuActivity.TAG_USERNAME, username);
             startActivity(intent);
         } else if (id == R.id.nav_concert) {
 
@@ -218,10 +224,12 @@ public class MenuActivity extends AppCompatActivity
 
                         context.startActivity(intent);
                     }*/
-                    Intent intent = new Intent(".ListeningMusic");
+                    Intent intent = new Intent(MenuActivity.this,ListeningMusicActivity.class);
                     intent.putExtra(ListeningMusicActivity.TAG_MUSICINDEX, position);
                     intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+                    intent.putExtra(MenuActivity.TAG_USERNAME, username);
                     startActivity(intent);
+                    //finish();
                 }
             });
         }
