@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.csddm.drawface.DrawActivity;
 import com.example.csddm.drawface.res.MyResourse;
@@ -29,7 +30,15 @@ public class ToDrawActivity extends AppCompatActivity {
     }
 
     public void skipToDraw(View view){
-        int age = Integer.parseInt(((EditText)findViewById(R.id.age_todraw)).getText().toString());
+        String ageStr = ((EditText)findViewById(R.id.age_todraw)).getText().toString();
+        int age;
+        if(ageStr==null){
+            Toast.makeText(this, "请输入年龄哟~", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }else{
+            age = Integer.parseInt(ageStr);
+        }
         RadioGroup radioGroup = (RadioGroup)findViewById(R.id.gender_todraw);
         boolean isBoy;
         if(radioGroup.getCheckedRadioButtonId()==R.id.female){

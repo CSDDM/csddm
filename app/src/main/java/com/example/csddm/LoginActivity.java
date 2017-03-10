@@ -87,7 +87,7 @@ public class LoginActivity extends AppCompatActivity implements OnClickListener{
             case R.id.guest_login:
                 Log.i("guest_login","in guest_login");
                 Intent intent = new Intent(LoginActivity.this, MenuActivity.class);
-                intent.putExtra(MenuActivity.TAG_USERNAME, "游客身份");
+                intent.putExtra(MenuActivity.TAG_USERNAME, MenuActivity.ISTOURSIT);
                 startActivity(intent);
                 finish();
                 break;

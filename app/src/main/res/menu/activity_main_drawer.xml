@@ -12,19 +12,20 @@
             android:title="社区" />
         <item
             android:id="@+id/nav_choosemusic"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_slideshow"
             android:title="听歌" />
         <item
             android:id="@+id/nav_uploadmusic"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_send"
             android:title="上传歌曲" />
         <item
             android:id="@+id/nav_search"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_menu_manage"
             android:title="搜索" />
     </group>
 
-    <item android:title="登陆用户专享功能">
+    <item android:title="登陆用户专享功能"
+        android:id="@+id/loginuser_items">
         <menu>
             <item
                 android:id="@+id/nav_draw"
@@ -35,9 +36,9 @@
                 android:icon="@drawable/ic_menu_send"
                 android:title="虚拟音乐会" />
             <item
-                android:id="@+id/nav_singandlisten"
+                android:id="@+id/nav_showrecord"
                 android:icon="@drawable/ic_menu_slideshow"
-                android:title="我来唱你来听" />
+                android:title="用户档案" />
         </menu>
     </item>
 

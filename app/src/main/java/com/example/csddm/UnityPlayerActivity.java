@@ -36,32 +36,32 @@ public class UnityPlayerActivity extends Activity {
     }
 
     //注册广播接受者
-    private void registBroadcast() {
-        BroadcastReceiver receiver = new FinishUnityBroadcast();
-        IntentFilter filter = new IntentFilter();
-        filter.addAction("finishUnity");
-        registerReceiver(receiver, filter);
-        Log.e("UnityPlayerActivity","registBroad");
-    }
-
-    public class FinishUnityBroadcast extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            Log.e("UnityPlayerActivity","FinishUnityBroadcast");
-            mUnityPlayer.quit();
-            Log.e("UnityPlayerActivity","FinishUnityBroadcast");
-            String useraccount = intent.getStringExtra(MenuActivity.TAG_USERACCOUNT);
-            String username = intent.getStringExtra(MenuActivity.TAG_USERNAME);
-            int musicindex = intent.getIntExtra(ListeningMusicActivity.TAG_MUSICINDEX,0);
-            int position = intent.getIntExtra(ListeningMusicActivity.TAG_STARTPOSITION,0);
-            Intent intent2 = new Intent(".ListeningMusicActivity");
-            intent2.putExtra(MenuActivity.TAG_USERACCOUNT,useraccount);
-            intent2.putExtra(MenuActivity.TAG_USERNAME,username);
-            intent2.putExtra(ListeningMusicActivity.TAG_MUSICINDEX, musicindex);
-            intent2.putExtra(ListeningMusicActivity.TAG_STARTPOSITION, position);
-            startActivity(intent2);
-        }
-    }
+//    private void registBroadcast() {
+//        BroadcastReceiver receiver = new FinishUnityBroadcast();
+//        IntentFilter filter = new IntentFilter();
+//        filter.addAction("finishUnity");
+//        registerReceiver(receiver, filter);
+//        Log.e("UnityPlayerActivity","registBroad");
+//    }
+//
+//    public class FinishUnityBroadcast extends BroadcastReceiver {
+//        @Override
+//        public void onReceive(Context context, Intent intent) {
+//            Log.e("UnityPlayerActivity","FinishUnityBroadcast");
+//            mUnityPlayer.quit();
+//            Log.e("UnityPlayerActivity","FinishUnityBroadcast");
+//            String useraccount = intent.getStringExtra(MenuActivity.TAG_USERACCOUNT);
+//            String username = intent.getStringExtra(MenuActivity.TAG_USERNAME);
+//            int musicindex = intent.getIntExtra(ListeningMusicActivity.TAG_MUSICINDEX,0);
+//            int position = intent.getIntExtra(ListeningMusicActivity.TAG_STARTPOSITION,0);
+//            Intent intent2 = new Intent(".ListeningMusicActivity");
+//            intent2.putExtra(MenuActivity.TAG_USERACCOUNT,useraccount);
+//            intent2.putExtra(MenuActivity.TAG_USERNAME,username);
+//            intent2.putExtra(ListeningMusicActivity.TAG_MUSICINDEX, musicindex);
+//            intent2.putExtra(ListeningMusicActivity.TAG_STARTPOSITION, position);
+//            startActivity(intent2);
+//        }
+//    }
 
     // Quit Unity
     @Override

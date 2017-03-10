@@ -25,10 +25,10 @@ import java.util.HashMap;
  */
 
 public class RegisterActivity extends AppCompatActivity {
-    private String account;
-    private String password;
-    private String repassword;
-    private String username; // 返回的数据
+    private String account="";
+    private String password="";
+    private String repassword="";
+    private String username=""; // 返回的数据
     private ProgressDialog dialog;
     private ArrayList<HashMap<String,String>> info = new ArrayList<>();
     // 返回主线程更新数据
@@ -47,6 +47,11 @@ public class RegisterActivity extends AppCompatActivity {
         password = ((EditText)findViewById(R.id.password_register)).getText().toString();
         repassword = ((EditText)findViewById(R.id.repassword_register)).getText().toString();
         username = ((EditText)findViewById(R.id.name_register)).getText().toString();
+        if(account.equals("")||password.equals("")||repassword.equals("")||username.equals("")) {
+            Toast.makeText(this, "请将信息填写完整~", Toast.LENGTH_SHORT)
+                    .show();
+            return;
+        }
 
         if (!checkNetwork()) {
             Toast toast = Toast.makeText(RegisterActivity.this,"网络未连接", Toast.LENGTH_SHORT);
@@ -78,7 +83,6 @@ public class RegisterActivity extends AppCompatActivity {
                     }
 
                     if(info.get(0).get("username").equals("")){
-                        Log.i("Register","该账户用户已存在");
                         dialog.setTitle("注册失败");
                         dialog.setMessage("该账户用户已存在");
                         dialog.setCancelable(true);

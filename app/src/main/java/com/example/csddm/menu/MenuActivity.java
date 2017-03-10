@@ -1,5 +1,6 @@
 package com.example.csddm.menu;
 
+import android.content.ClipData;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.ListViewAutoScrollHelper;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -23,11 +25,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.csddm.ListeningMusicActivity;
 import com.example.csddm.LoginActivity;
 import com.example.csddm.R;
+import com.example.csddm.RecordActivity;
 import com.example.csddm.ToDrawActivity;
 import com.example.csddm.drawface.DrawActivity;
 import com.example.csddm.drawface.res.MyResourse;
@@ -46,6 +51,7 @@ public class MenuActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
     public static final String TAG_USERACCOUNT ="user_account";
     public static final String TAG_USERNAME ="user_name";
+    public static final String ISTOURSIT ="游客身份";
     public static MediaPlayer mp3;
     public static Timer mTimer;
     public static TimerTask mTimerTask;
@@ -62,6 +68,7 @@ public class MenuActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.menu_activity);
+
         updateUserName();
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -165,17 +172,29 @@ public class MenuActivity extends AppCompatActivity
         } else if (id == R.id.nav_uploadmusic) {
 
         } else if (id == R.id.nav_search) {
-            SQLiteHelper dbHelper = new SQLiteHelper(this,"csddm",null,1);
-            ArrayList<ListenRecord> listenRecord = new QueryData().getListenRecordByAccount(useraccount,dbHelper);
+
         }else if (id == R.id.nav_draw) {
-            Intent intent = new Intent(this, ToDrawActivity.class);
-            intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
-            intent.putExtra(MenuActivity.TAG_USERNAME, username);
-            startActivity(intent);
+            if(username.equals(MenuActivity.ISTOURSIT)){
+                Toast.makeText(this, "客官，您现在还是名游客，得先登陆哟~", Toast.LENGTH_SHORT)
+                        .show();
+            }else {
+                Intent intent = new Intent(this, ToDrawActivity.class);
+                intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+                intent.putExtra(MenuActivity.TAG_USERNAME, username);
+                startActivity(intent);
+            }
         } else if (id == R.id.nav_concert) {
 
-        }else if (id == R.id.nav_singandlisten) {
-
+        }else if (id == R.id.nav_showrecord) {
+            if(username.equals(MenuActivity.ISTOURSIT)){
+                Toast.makeText(this, "客官，您现在还是名游客，得先登陆哟~", Toast.LENGTH_SHORT)
+                        .show();
+            }else {
+                Intent intent = new Intent(MenuActivity.this, RecordActivity.class);
+                intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+                intent.putExtra(MenuActivity.TAG_USERNAME, username);
+                startActivity(intent);
+            }
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

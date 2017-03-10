@@ -7,4 +7,5 @@ package com.example.csddm.web;
 public class IPWeb {
     public static final String IP ="10.222.245.34:8080";
     //public static final String IP ="10.147.135.29:8080";
+    //public static final String IP ="10.147.140.32:8080";
 }

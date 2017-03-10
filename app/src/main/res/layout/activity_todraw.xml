@@ -54,6 +54,7 @@
                 android:layout_height="wrap_content"
                 android:text="男"
                 android:textSize="20sp"
+                android:checked="true"
                 />
             <RadioButton
                 android:id="@+id/female"

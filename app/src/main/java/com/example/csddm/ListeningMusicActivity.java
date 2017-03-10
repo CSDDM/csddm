@@ -112,6 +112,8 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
                 //mp3.release();
                 isInCurPage=false;
                 Intent intent = new Intent(ListeningMusicActivity.this, DrawUnityActivity.class);
+                intent.putExtra(MenuActivity.TAG_USERACCOUNT, useraccount);
+                intent.putExtra(MenuActivity.TAG_USERNAME, username);
                 intent.putExtra(ListeningMusicActivity.TAG_MUSICINDEX, musicindex);
                 intent.putExtra(DrawUnityActivity.TAG_SONGPATH, ROOTPATH + songpath);
                 intent.putExtra(DrawUnityActivity.TAG_STOPPOSITION, mp3.getCurrentPosition());
@@ -265,6 +267,9 @@ public class ListeningMusicActivity extends AppCompatActivity {       //声名�
     }
 
     private void saveListenRecord(int ms, final String songid) {
+        if(username.equals(MenuActivity.ISTOURSIT)){
+            return;
+        }
         final int listentime = (int) (ms / 1000);
         class MySaveListenRecordThread implements Runnable {
             boolean isSuccess;
